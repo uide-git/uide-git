@@ -1,0 +1,27 @@
+name: readme
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  push:
+    branches:
+      - main
+
+jobs:
+  update-time:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: update time
+        run: |
+          msg="hi, i code; now is **$(date)**"
+          stats="![github stats](https://github-readme-stats.vercel.app/api?username=${GITHUB_ACTOR}&count_private=true&theme=dark&show_icons=true)"
+          langs="![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=${GITHUB_ACTOR}&theme=dark&layout=compact)"
+
+          echo -e "$msg\n$time\n$stats\n$langs" > README.md
+
+          git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          git config --global user.name "${GITHUB_ACTOR}"
+          git add README.md
+          git commit -m "update time"
+          git push origin main
